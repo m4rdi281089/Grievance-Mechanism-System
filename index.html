@@ -1,0 +1,1047 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Grievance Mechanism - Aplikasi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+    <link href="style.css" rel="stylesheet"/>
+    <style>
+        /* --- Gaya Tambahan & Perbaikan --- */
+
+        /* Gaya untuk tombol lampiran */
+        .attachment-button {
+            transition: all 0.2s ease-in-out;
+        }
+        .attachment-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .file-name-display {
+            margin-left: 0.75rem; /* 12px */
+            font-size: 0.875rem; /* 14px */
+            color: #6c757d; /* Warna teks abu-abu */
+            vertical-align: middle;
+            overflow: hidden; /* Cegah teks meluber */
+            text-overflow: ellipsis; /* Tampilkan elipsis jika teks terlalu panjang */
+            white-space: nowrap; /* Jaga agar teks tetap satu baris */
+            max-width: 200px; /* Batasi lebar maksimum (sesuaikan) */
+            display: inline-block; /* Agar max-width berfungsi */
+        }
+        /* Padding untuk konten utama */
+        .main-content-area {
+            padding-top: 1.5rem;
+        }
+        /* Styling tabel user management */
+        #tabelUserManagement th, #tabelUserManagement td {
+            vertical-align: middle;
+        }
+        #tabelUserManagement .btn-group-sm .btn, #tabelUserManagement .btn-sm {
+            padding: 0.2rem 0.4rem;
+            font-size: 0.75rem;
+        }
+        /* Styling placeholder untuk badge peran (sesuaikan warna jika perlu) */
+        .badge.bg-administrator { background-color: var(--role-admin-bg, #dc3545) !important; color: var(--role-admin-text, white) !important; }
+        .badge.bg-supervisor { background-color: var(--role-supervisor-bg, #ffc107) !important; color: var(--role-supervisor-text, #000) !important; }
+        .badge.bg-staff { background-color: var(--role-staff-bg, #0d6efd) !important; color: var(--role-staff-text, white) !important; }
+        .badge.bg-viewer { background-color: var(--role-viewer-bg, #6c757d) !important; color: var(--role-viewer-text, white) !important; }
+        .badge.bg-liasion---administrator, .badge.role-liasion-administrator { background-color: var(--role-liasion-admin-bg, #6f42c1) !important; color: var(--role-liasion-admin-text, white) !important; }
+        .badge.bg-guest---assistant, .badge.role-guest-assistant { background-color: var(--role-guest-assist-bg, #198754) !important; color: var(--role-guest-assist-text, white) !important; }
+
+
+         /* Style untuk modal */
+        .modal-header .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%); /* Tombol close putih */
+        }
+        /* Styling validasi form Bootstrap */
+        .was-validated .form-control:invalid, .form-control.is-invalid {
+             border-color: #dc3545;
+             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+             background-repeat: no-repeat;
+             background-position: right calc(0.375em + 0.1875rem) center;
+             background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+        .was-validated .form-control:valid, .form-control.is-valid {
+             border-color: #198754;
+             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+             background-repeat: no-repeat;
+             background-position: right calc(0.375em + 0.1875rem) center;
+             background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+        .invalid-feedback {
+             display: none; /* Sembunyikan default */
+             width: 100%;
+             margin-top: 0.25rem;
+             font-size: .875em;
+             color: #dc3545;
+        }
+         .was-validated .form-control:invalid ~ .invalid-feedback,
+         .form-control.is-invalid ~ .invalid-feedback {
+            display: block; /* Tampilkan saat invalid */
+         }
+         /* Styling untuk error pada group checkbox permission */
+         .was-validated #formTabPermissions:invalid ~ .invalid-feedback,
+         #formTabPermissions.is-invalid ~ .invalid-feedback {
+             display: block;
+         }
+
+        /* Gaya untuk border pada kartu statistik di dashboard */
+        #dashboardContent .stat-card { /* Target spesifik ke konten dashboard */
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        #dashboardContent .stat-card:hover {
+            border-color: #cccccc;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.07);
+        }
+
+        /* --- Gaya Navigasi Dropdown Utama --- */
+        .main-dropdown-nav {
+            background-color: var(--primary-color, #1e8449); /* Warna latar belakang */
+            padding: 0.5rem 1rem; /* Padding */
+            border-radius: 0.375rem; /* Rounded corners */
+            margin-bottom: 1.5rem; /* Jarak ke konten */
+        }
+        .main-dropdown-nav .nav-item > .nav-link, /* Target direct child nav-link */
+        .main-dropdown-nav .nav-item > .dropdown-toggle { /* Target direct child dropdown-toggle */
+            color: white; /* Warna teks */
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border: none;
+            background: none;
+            border-radius: 0.25rem; /* Sedikit rounded untuk tombol utama */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+        }
+        .main-dropdown-nav .nav-item > .nav-link:hover,
+        .main-dropdown-nav .nav-item > .dropdown-toggle:hover {
+            color: #f8f9fa; /* Warna teks saat hover */
+            background-color: rgba(255, 255, 255, 0.1); /* Latar hover transparan */
+        }
+         .main-dropdown-nav .dropdown-menu {
+             border-radius: 0.375rem;
+             box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+             margin-top: 0.25rem; /* Beri sedikit jarak dari toggle */
+         }
+         .main-dropdown-nav .dropdown-item {
+             padding: 0.5rem 1rem;
+             font-weight: 400;
+             transition: background-color 0.2s ease-in-out;
+         }
+         .main-dropdown-nav .dropdown-item:hover,
+         .main-dropdown-nav .dropdown-item:focus {
+            background-color: #e9ecef; /* Warna hover untuk item dropdown */
+         }
+         .main-dropdown-nav .dropdown-item i {
+             width: 1.25em; /* Ruang untuk ikon */
+             margin-right: 0.5rem;
+             color: #495057; /* Warna ikon dropdown item */
+         }
+         /* Kelas untuk menandai tombol navigasi utama yang aktif */
+         .main-dropdown-nav .nav-item > .nav-link.active-section,
+         .main-dropdown-nav .nav-item > .dropdown-toggle.active-section {
+            background-color: rgba(0, 0, 0, 0.15) !important; /* Lebih gelap untuk menunjukkan aktif */
+            color: white !important;
+            font-weight: bold;
+         }
+        /* --- Akhir Gaya Navigasi Dropdown --- */
+
+        /* Pastikan tombol logout di header tetap terlihat */
+        .app-header #logoutButtonContainer {
+             display: flex;
+             align-items: center;
+             height: 100%; /* Agar align-items bekerja */
+        }
+
+        /* Sembunyikan semua section content secara default */
+        .section-content {
+            display: none;
+            animation: fadeIn 0.5s; /* Animasi fade-in sederhana */
+        }
+        .section-content.active {
+            display: block; /* Tampilkan section yang aktif */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Sembunyikan sub-konten di Proses Pengaduan secara default */
+        .proses-sub-content {
+            display: none;
+        }
+        .proses-sub-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        /* Gaya untuk area deskripsi kategori */
+        #kategoriDeskripsiContainer { /* Kontainer baru untuk efek hover */
+            margin-top: 0.5rem;
+            border-radius: 0.375rem; /* Rounded corners untuk kontainer */
+            transition: all 0.3s ease-in-out;
+            padding: 0; /* Hapus padding dari kontainer */
+        }
+
+        #kategoriDeskripsi {
+            font-size: 0.9rem; /* Sedikit perbesar font */
+            line-height: 1.6; /* Perbaiki jarak antar baris */
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 0.375rem; /* Samakan dengan kontainer */
+            padding: 1rem; /* Perbesar padding internal */
+            min-height: 60px;
+            transition: all 0.3s ease-in-out, color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+            color: #5a6268; /* Warna teks default lebih gelap */
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); /* Bayangan lembut ke dalam */
+        }
+
+        #kategoriDeskripsiContainer:hover #kategoriDeskripsi {
+            transform: translateY(-2px); /* Efek angkat sedikit saat hover kontainer */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1), inset 0 1px 2px rgba(0,0,0,0.03); /* Bayangan luar lebih jelas */
+        }
+
+        #kategoriDeskripsi:empty {
+            display: none;
+        }
+
+        /* Warna teks spesifik untuk setiap kategori */
+        .kategori-lingkungan-text { color: #27ae60 !important; border-left: 5px solid #27ae60; background-color: #eafaf1 !important;}
+        .kategori-sosial-text { color: #2980b9 !important; border-left: 5px solid #2980b9; background-color: #eaf4fa !important;}
+        .kategori-infrastruktur-text { color: #8e44ad !important; border-left: 5px solid #8e44ad; background-color: #f6eafa !important;}
+        .kategori-ketenagakerjaan-text { color: #d35400 !important; border-left: 5px solid #d35400; background-color: #fbeee0 !important;}
+        .kategori-umum-text { color: #7f8c8d !important; border-left: 5px solid #7f8c8d; background-color: #f4f6f7 !important;}
+
+        /* Gaya tambahan untuk ikon di deskripsi jika diinginkan */
+        #kategoriDeskripsi .fas { /* Target ikon di dalam #kategoriDeskripsi */
+            margin-right: 8px;
+            opacity: 0.8; /* Sedikit lebih jelas */
+            font-size: 1.1em; /* Sedikit perbesar ikon */
+            vertical-align: middle; /* Sejajarkan ikon dengan teks */
+        }
+         /* Pastikan warna ikon mengikuti warna teks kategori */
+        .kategori-lingkungan-text .fas { color: #27ae60 !important; }
+        .kategori-sosial-text .fas { color: #2980b9 !important; }
+        .kategori-infrastruktur-text .fas { color: #8e44ad !important; }
+        .kategori-ketenagakerjaan-text .fas { color: #d35400 !important; }
+        .kategori-umum-text .fas { color: #7f8c8d !important; }
+
+
+    </style>
+</head>
+<body>
+
+<div id="appSection" style="display: none;"> <div class="app-container">
+        <div class="app-header">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-md-3 col-sm-4 col-6 text-start">
+                        <img src="Logo Perusahaan.png" alt="Logo Perusahaan" style="height: 50px;" onerror="this.onerror=null; this.src='https://placehold.co/150x50/e0e0e0/777?text=Logo'; console.error('Gagal memuat Logo Perusahaan.png')">
+                    </div>
+                    <div class="col-md-6 col-sm-4 d-none d-sm-block text-center">
+                        <h4 class="app-title text-uppercase fw-bold mb-0">Grievance Mechanism System</h4>
+                    </div>
+                    <div class="col-md-3 col-sm-4 col-6 d-flex justify-content-end align-items-center">
+                        <div id="userInfo" class="me-2">
+                            </div>
+                        <div id="logoutButtonContainer">
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="main-dropdown-nav navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainAppNavbar" aria-controls="mainAppNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon" style="filter: invert(1);"></span> </button>
+
+                <div class="collapse navbar-collapse" id="mainAppNavbar">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item" id="nav-item-input">
+                            <a class="nav-link" href="#" data-target-section="#inputContent">
+                               <i class="fas fa-edit me-1"></i> Form Input
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown" id="nav-item-proses">
+                            <a class="nav-link dropdown-toggle" href="#" id="prosesDropdownToggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-cogs me-1"></i> Proses Pengaduan
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="prosesDropdownToggle" id="prosesDropdownMenuNav">
+                                <li><a class="dropdown-item" href="#" data-target-section="#prosesContent" data-sub-target="#data-table"><i class="fas fa-table"></i> Data Tabel</a></li>
+                                <li><a class="dropdown-item" href="#" data-target-section="#prosesContent" data-sub-target="#form-evaluasi"><i class="fas fa-clipboard-check"></i> Form Evaluasi</a></li>
+                                <li><a class="dropdown-item" href="#" data-target-section="#prosesContent" data-sub-target="#surat-tanggapan"><i class="fas fa-envelope"></i> Surat Tanggapan</a></li>
+                                <li><a class="dropdown-item" href="#" data-target-section="#prosesContent" data-sub-target="#form-banding"><i class="fas fa-balance-scale"></i> Form Banding</a></li>
+                                <li><a class="dropdown-item" href="#" data-target-section="#prosesContent" data-sub-target="#riwayat-proses"><i class="fas fa-history"></i> Riwayat Proses</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item" id="nav-item-dashboard">
+                            <a class="nav-link" href="#" data-target-section="#dashboardContent">
+                                <i class="fas fa-chart-pie me-1"></i> Dashboard
+                            </a>
+                        </li>
+
+                        <li class="nav-item" id="nav-item-user">
+                            <a class="nav-link" href="#" data-target-section="#userManagementContent">
+                                <i class="fas fa-users-cog me-1"></i> User Management
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="main-content-area container-fluid">
+            <div id="inputContent" class="section-content">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <i class="fas fa-file-alt me-2"></i> Form Pengaduan Baru
+                    </div>
+                    <div class="card-body p-4">
+                        <form id="formPengaduan" novalidate>
+                            <div class="row mb-3">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <label for="noReferensi" class="form-label">No. Referensi</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
+                                        <input class="form-control bg-light" id="noReferensi" readonly type="text"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="tanggal" class="form-label">Tanggal Pengaduan</label>
+                                    <div class="input-group has-validation">
+                                        <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                        <input class="form-control" id="tanggal" required type="date"/>
+                                        <div class="invalid-feedback">Tanggal wajib diisi.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <label for="kategori" class="form-label">Kategori Pengaduan</label>
+                                    <div class="input-group has-validation">
+                                        <span class="input-group-text"><i class="fas fa-tag"></i></span>
+                                        <select class="form-select" id="kategori" required>
+                                            <option value="">-- Pilih Kategori --</option>
+                                            <option value="Lingkungan">Lingkungan</option>
+                                            <option value="Sosial">Sosial</option>
+                                            <option value="Infrastruktur">Infrastruktur</option>
+                                            <option value="Ketenagakerjaan">Ketenagakerjaan</option>
+                                            <option value="Umum">Umum</option>
+                                        </select>
+                                        <div class="invalid-feedback">Kategori wajib dipilih.</div>
+                                    </div>
+                                    <div id="kategoriDeskripsiContainer" style="display: none;">
+                                        <div id="kategoriDeskripsi" class="p-3"> </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="pelapor" class="form-label">Nama Pelapor</label>
+                                    <div class="input-group has-validation">
+                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                        <input class="form-control" id="pelapor" placeholder="Masukkan nama lengkap pelapor" required type="text"/>
+                                        <div class="invalid-feedback">Nama pelapor wajib diisi.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <label for="kontak" class="form-label">No. Kontak (HP) Pelapor</label>
+                                    <div class="input-group has-validation">
+                                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                        <input class="form-control" id="kontak" placeholder="Contoh: 081234567890" required type="tel" pattern="[0-9\+]{10,}"/>
+                                        <div class="invalid-feedback">Masukkan nomor kontak yang valid (min. 10 digit angka).</div>
+                                    </div>
+                                </div>
+                                 <div class="col-md-6">
+                                    <label for="aksi" class="form-label">Aksi</label>
+                                    <div class="input-group has-validation">
+                                        <span class="input-group-text"><i class="fas fa-bolt"></i></span>
+                                        <select class="form-select" id="aksi" required>
+                                            <option value="">-- Pilih Aksi --</option>
+                                            <option value="Aktif">Aktif</option>
+                                            <option value="Pasif">Pasif</option>
+                                        </select>
+                                         <div class="invalid-feedback">Aksi wajib dipilih.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-4 mb-3 mb-md-0">
+                                    <label for="kabupaten" class="form-label">Kabupaten</label>
+                                    <div class="input-group has-validation">
+                                        <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                        <select class="form-select" id="kabupaten" required>
+                                            <option value="">-- Pilih Kabupaten --</option>
+                                            </select>
+                                        <div class="invalid-feedback">Kabupaten wajib dipilih.</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3 mb-md-0">
+                                    <label for="kecamatan" class="form-label">Kecamatan</label>
+                                    <div class="input-group has-validation">
+                                        <span class="input-group-text"><i class="fas fa-map"></i></span>
+                                        <select class="form-select" id="kecamatan" required disabled>
+                                            <option value="">-- Pilih Kecamatan --</option>
+                                            </select>
+                                        <div class="invalid-feedback">Kecamatan wajib dipilih.</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="desa" class="form-label">Desa</label>
+                                    <div class="input-group has-validation">
+                                        <span class="input-group-text"><i class="fas fa-home"></i></span>
+                                        <select class="form-select" id="desa" required disabled>
+                                            <option value="">-- Pilih Desa --</option>
+                                            </select>
+                                        <div class="invalid-feedback">Desa wajib dipilih.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <label for="prioritas" class="form-label">Prioritas</label>
+                                    <div class="input-group has-validation">
+                                        <span class="input-group-text"><i class="fas fa-exclamation-circle"></i></span>
+                                        <select class="form-select" id="prioritas" required>
+                                            <option value="">-- Pilih Prioritas --</option>
+                                            <option value="Low Risk">Low Risk</option>
+                                            <option value="Medium Risk" selected>Medium Risk</option> <option value="High Risk">High Risk</option>
+                                        </select>
+                                         <div class="invalid-feedback">Prioritas wajib dipilih.</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="pic" class="form-label">Penanggung Jawab (PIC)</label>
+                                    <div class="input-group has-validation">
+                                        <span class="input-group-text"><i class="fas fa-user-tie"></i></span>
+                                        <select class="form-select" id="pic" required>
+                                            <option value="">-- Pilih PIC --</option>
+                                            <option value="Facilitator">Facilitator</option>
+                                            <option value="Supervisor">Supervisor</option>
+                                            <option value="Superintendent">Superintendent</option>
+                                            <option value="Head">Head</option>
+                                        </select>
+                                         <div class="invalid-feedback">PIC wajib dipilih.</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <label for="status" class="form-label">Status</label>
+                                    <div class="input-group has-validation">
+                                        <span class="input-group-text"><i class="fas fa-tasks"></i></span>
+                                        <select class="form-select" id="status" required>
+                                            <option value="">-- Pilih Status --</option>
+                                            <option value="On Progress" selected>On Progress</option> <option value="Hold">Hold</option>
+                                            <option value="Done">Done</option>
+                                        </select>
+                                        <div class="invalid-feedback">Status wajib dipilih.</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="tenggat" class="form-label">Tenggat Waktu</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-hourglass-end"></i></span>
+                                        <input class="form-control" id="tenggat" type="date"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3 has-validation">
+                                <label for="deskripsi" class="form-label">Deskripsi Pengaduan</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-comment-alt"></i></span>
+                                    <textarea class="form-control" id="deskripsi" placeholder="Masukkan deskripsi detail pengaduan disini..." rows="4" required></textarea>
+                                    <div class="invalid-feedback">Deskripsi wajib diisi.</div>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="bukti" class="form-label">Bukti Pendukung (Opsional)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-paperclip"></i></span>
+                                     <button type="button" class="btn btn-outline-secondary attachment-button" onclick="document.getElementById('bukti').click()">
+                                         <i class="fas fa-upload me-1"></i> Pilih File
+                                     </button>
+                                     <input class="d-none" id="bukti" type="file" onchange="displayFileName('bukti', 'file-name-bukti')"/>
+                                     <span id="file-name-bukti" class="file-name-display"></span>
+                                </div>
+                                <small class="text-muted">Fitur upload file sebenarnya tidak aktif dalam contoh ini.</small>
+                            </div>
+                            <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+                                <button class="btn btn-outline-secondary" id="resetBtn" type="button">
+                                    <i class="fas fa-undo me-2"></i>Reset / Batal Edit
+                                </button>
+                                <button class="btn btn-primary" id="submitBtn" type="submit">
+                                    <i class="fas fa-save me-2"></i>Simpan
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div id="prosesContent" class="section-content">
+                <div id="prosesSubContentContainer">
+                    <div class="proses-sub-content" id="data-table">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-header bg-light"> <i class="fas fa-search me-2"></i> Cari & Filter Data Pengaduan
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3 align-items-center">
+                                    <div class="col-md-6">
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                            <input class="form-control" id="searchInput" placeholder="Cari berdasarkan No. Ref, Pelapor, Kategori, Lokasi, PIC..." type="text"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-filter"></i></span>
+                                            <select class="form-select" id="filterStatus">
+                                                <option value="all">Semua Status</option>
+                                                <option value="On Progress">On Progress</option>
+                                                <option value="Hold">Hold</option>
+                                                <option value="Done">Done</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 text-md-end">
+                                        <button class="btn btn-outline-secondary w-100" id="resetFilterBtn">
+                                           <i class="fas fa-sync-alt me-1"></i> Reset
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card shadow-sm">
+                             <div class="card-header d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="fas fa-table me-2"></i> Data Pengaduan Tersimpan
+                                </div>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-success" id="exportExcelBtn" title="Export ke Excel">
+                                        <i class="fas fa-file-excel"></i> Excel
+                                    </button>
+                                    <button class="btn btn-danger ms-1" id="exportPdfBtn" title="Export ke PDF">
+                                        <i class="fas fa-file-pdf"></i> PDF
+                                    </button>
+                                    <button class="btn btn-secondary ms-1" id="printTableBtn" title="Cetak Tabel">
+                                        <i class="fas fa-print"></i> Print
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body table-responsive">
+                                <table class="table table-bordered table-striped table-hover align-middle" id="tabelData">
+                                    <thead class="table-dark"> <tr>
+                                            <th class="text-center" width="5%">No</th>
+                                            <th width="12%">No. Ref</th>
+                                            <th width="10%">Tanggal</th>
+                                            <th width="12%">Kategori</th>
+                                            <th width="15%">Pelapor</th>
+                                            <th class="text-center" width="12%">Status</th>
+                                            <th width="10%">PIC</th>
+                                            <th class="text-center" width="12%">Prioritas</th>
+                                            <th class="text-center" width="12%">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbodyData">
+                                        <tr><td colspan="9" class="text-center py-5"><span class="spinner-border spinner-border-sm"></span> Memuat data...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                             <div id="paginationContainer" class="d-flex justify-content-center mt-3 mb-3">
+                                </div>
+                        </div>
+                    </div>
+                    <div class="proses-sub-content" id="form-evaluasi">
+                        <div class="card shadow-sm">
+                            <div class="card-header"><i class="fas fa-clipboard-check me-2"></i> Formulir Evaluasi Pengaduan</div>
+                            <div class="card-body p-4">
+                                <form id="formEvaluasi" novalidate>
+                                   <div class="mb-3">
+                                        <label class="form-label" for="idEvaluasi">Pilih ID Pengaduan</label>
+                                        <select class="form-select" id="idEvaluasi" required>
+                                            <option value="">-- Pilih ID Pengaduan --</option>
+                                            </select>
+                                        <div class="invalid-feedback">ID Pengaduan wajib dipilih.</div>
+                                        <div class="mt-3 alert alert-info p-2 mb-0" id="infoEvaluasi" style="display:none;">
+                                            <strong>Pelapor:</strong> <span id="namaPelaporEvaluasi"></span> |
+                                            <strong>Kategori:</strong> <span id="kategoriEvaluasi"></span>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="penilaian">Penilaian Kelayakan</label>
+                                        <select class="form-select" id="penilaian" required>
+                                            <option value="">-- Pilih Penilaian --</option>
+                                            <option value="Memadai">Memadai</option>
+                                            <option value="Tidak Memadai">Tidak Memadai</option>
+                                        </select>
+                                        <div class="invalid-feedback">Penilaian wajib dipilih.</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="catatanEvaluasi">Catatan Evaluasi</label>
+                                        <textarea class="form-control" id="catatanEvaluasi" placeholder="Berikan catatan hasil evaluasi..." required rows="4"></textarea>
+                                        <div class="invalid-feedback">Catatan evaluasi wajib diisi.</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Lampiran Evaluasi (Opsional)</label>
+                                        <div>
+                                            <button type="button" class="btn btn-outline-secondary attachment-button" onclick="document.getElementById('file-input-evaluasi').click()">
+                                                <i class="fas fa-paperclip me-1"></i> Sisipkan Lampiran
+                                            </button>
+                                            <input type="file" id="file-input-evaluasi" class="d-none" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" onchange="displayFileName('file-input-evaluasi', 'file-name-evaluasi')">
+                                            <span id="file-name-evaluasi" class="file-name-display"></span>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-success mt-2" type="submit">
+                                        <i class="fas fa-save me-1"></i> Simpan Evaluasi
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="proses-sub-content" id="surat-tanggapan">
+                        <div class="card shadow-sm">
+                            <div class="card-header"><i class="fas fa-envelope me-2"></i> Surat Tanggapan</div>
+                            <div class="card-body p-4">
+                                <form id="formTanggapan" novalidate>
+                                   <div class="mb-3">
+                                        <label class="form-label" for="idTanggapan">Pilih ID Pengaduan</label>
+                                        <select class="form-select" id="idTanggapan" required>
+                                            <option value="">-- Pilih ID Pengaduan --</option>
+                                            </select>
+                                        <div class="invalid-feedback">ID Pengaduan wajib dipilih.</div>
+                                        <div class="mt-3 alert alert-info p-2 mb-0" id="infoTanggapan" style="display:none;">
+                                            <strong>Pelapor:</strong> <span id="namaPelaporTanggapan"></span> |
+                                            <strong>Kategori:</strong> <span id="kategoriTanggapan"></span>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="catatanTanggapan">Catatan Tanggapan</label>
+                                        <textarea class="form-control" id="catatanTanggapan" placeholder="Masukkan ringkasan atau catatan terkait surat tanggapan..." required rows="4"></textarea>
+                                        <div class="invalid-feedback">Catatan tanggapan wajib diisi.</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="file-input-tanggapan">Upload File Surat Tanggapan (PDF)</label>
+                                        <div>
+                                            <button type="button" class="btn btn-outline-primary attachment-button" onclick="document.getElementById('file-input-tanggapan').click()">
+                                                <i class="fas fa-paperclip me-1"></i> Sisipkan Lampiran
+                                            </button>
+                                            <input type="file" id="file-input-tanggapan" class="d-none" accept=".pdf" onchange="displayFileName('file-input-tanggapan', 'file-name-tanggapan')">
+                                            <span id="file-name-tanggapan" class="file-name-display"></span>
+                                        </div>
+                                    </div>
+                                     <button class="btn btn-primary mt-2" type="submit">
+                                        <i class="fas fa-paper-plane me-1"></i> Simpan Tanggapan
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="proses-sub-content" id="form-banding">
+                        <div class="card shadow-sm">
+                            <div class="card-header"><i class="fas fa-balance-scale me-2"></i> Formulir Banding</div>
+                            <div class="card-body p-4">
+                                <form id="formBanding" novalidate>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="idBanding">Pilih ID Pengaduan</label>
+                                        <select class="form-select" id="idBanding" required>
+                                            <option value="">-- Pilih ID Pengaduan --</option>
+                                            </select>
+                                         <div class="invalid-feedback">ID Pengaduan wajib dipilih.</div>
+                                         <div class="mt-3 alert alert-info p-2 mb-0" id="infoBanding" style="display:none;">
+                                            <strong>Pelapor:</strong> <span id="namaPelaporBanding"></span> |
+                                            <strong>Kategori:</strong> <span id="kategoriBanding"></span>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="alasanBanding">Alasan Pengajuan Banding</label>
+                                        <textarea class="form-control" id="alasanBanding" placeholder="Jelaskan alasan mengapa Anda mengajukan banding..." required rows="4"></textarea>
+                                        <div class="invalid-feedback">Alasan banding wajib diisi.</div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="file-input-banding">Lampiran Bukti Pendukung Banding (Opsional)</label>
+                                        <div>
+                                            <button type="button" class="btn btn-outline-warning text-dark attachment-button" onclick="document.getElementById('file-input-banding').click()">
+                                                 <i class="fas fa-paperclip me-1"></i> Sisipkan Lampiran
+                                            </button>
+                                             <input type="file" id="file-input-banding" class="d-none" accept=".pdf,.jpg,.jpeg,.png" onchange="displayFileName('file-input-banding', 'file-name-banding')">
+                                             <span id="file-name-banding" class="file-name-display"></span>
+                                        </div>
+                                    </div>
+                                     <button class="btn btn-warning text-dark mt-2" type="submit">
+                                        <i class="fas fa-gavel me-1"></i> Ajukan Banding
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="proses-sub-content" id="riwayat-proses">
+                        <div class="card shadow-sm">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <div><i class="fas fa-history me-2"></i> Riwayat Proses Pengaduan</div>
+                                <button class="btn btn-sm btn-outline-primary" id="refreshRiwayatBtn">
+                                    <i class="fas fa-sync-alt me-1"></i> Refresh Riwayat
+                                </button>
+                            </div>
+                            <div class="card-body table-responsive">
+                                <table class="table table-bordered table-striped table-hover" id="tabelRiwayatProses">
+                                    <thead class="table-light"> <tr>
+                                            <th width="15%">ID Pengaduan</th>
+                                            <th width="15%">Tanggal Proses</th>
+                                            <th width="15%">Jenis Proses</th>
+                                            <th width="40%">Detail (Catatan/Alasan/Penilaian)</th>
+                                            <th width="15%">File Lampiran</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="riwayatProsesBody">
+                                        <tr><td colspan="5" class="text-center py-4">Belum ada data proses. Pilih sub-menu atau klik Refresh untuk memuat.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    </div> </div> <div id="dashboardContent" class="section-content">
+                 <div class="row mb-4">
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="stat-card h-100" id="totalPengaduanCard">
+                            <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
+                            <div class="stat-number" id="totalPengaduan">0</div>
+                            <div class="stat-title">Total Pengaduan</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="stat-card h-100" id="totalOnprogressCard">
+                            <div class="stat-icon"><i class="fas fa-spinner fa-spin"></i></div>
+                            <div class="stat-number" id="totalOnprogress">0</div>
+                            <div class="stat-title">On Progress</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="stat-card h-100" id="totalHoldCard">
+                            <div class="stat-icon"><i class="fas fa-pause-circle"></i></div>
+                            <div class="stat-number" id="totalHold">0</div>
+                            <div class="stat-title">Hold</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="stat-card h-100" id="totalDoneCard">
+                            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                            <div class="stat-number" id="totalDone">0</div>
+                            <div class="stat-title">Done</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-12 mb-3">
+                        <h5 class="text-secondary"><i class="fas fa-tags me-2"></i>Jumlah Pengaduan per Kategori</h5>
+                    </div>
+                    <div class="col-lg col-md-4 col-sm-6 mb-4">
+                        <div class="stat-card h-100" id="totalLingkunganCard">
+                            <div class="stat-icon"><i class="fas fa-leaf" style="color: #27ae60;"></i></div>
+                            <div class="stat-number" id="totalLingkungan">0</div>
+                            <div class="stat-title">Lingkungan</div>
+                        </div>
+                    </div>
+                    <div class="col-lg col-md-4 col-sm-6 mb-4">
+                        <div class="stat-card h-100" id="totalSosialCard">
+                            <div class="stat-icon"><i class="fas fa-users" style="color: #2980b9;"></i></div>
+                            <div class="stat-number" id="totalSosial">0</div>
+                            <div class="stat-title">Sosial</div>
+                        </div>
+                    </div>
+                    <div class="col-lg col-md-4 col-sm-6 mb-4">
+                        <div class="stat-card h-100" id="totalInfrastrukturCard">
+                            <div class="stat-icon"><i class="fas fa-building" style="color: #8e44ad;"></i></div>
+                            <div class="stat-number" id="totalInfrastruktur">0</div>
+                            <div class="stat-title">Infrastruktur</div>
+                        </div>
+                    </div>
+                    <div class="col-lg col-md-4 col-sm-6 mb-4">
+                        <div class="stat-card h-100" id="totalKetenagakerjaanCard">
+                            <div class="stat-icon"><i class="fas fa-briefcase" style="color: #d35400;"></i></div>
+                            <div class="stat-number" id="totalKetenagakerjaan">0</div>
+                            <div class="stat-title">Ketenagakerjaan</div>
+                        </div>
+                    </div>
+                    <div class="col-lg col-md-4 col-sm-6 mb-4">
+                        <div class="stat-card h-100" id="totalUmumCard">
+                            <div class="stat-icon"><i class="fas fa-info-circle" style="color: #7f8c8d;"></i></div>
+                            <div class="stat-number" id="totalUmum">0</div>
+                            <div class="stat-title">Umum</div>
+                        </div>
+                    </div>
+                </div>
+                 
+                <div class="row">
+                    <div class="col-lg-6 mb-4">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header"><i class="fas fa-chart-pie me-2"></i> Distribusi Kategori Pengaduan</div>
+                            <div class="card-body">
+                                <div class="chart-container" style="position: relative; height:300px; width:100%"><canvas id="pieChart"></canvas></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mb-4">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header"><i class="fas fa-chart-bar me-2"></i> Jumlah Pengaduan per Status</div>
+                            <div class="card-body">
+                                <div class="chart-container" style="position: relative; height:300px; width:100%"><canvas id="barChart"></canvas></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 mb-4">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header"><i class="fas fa-chart-line me-2"></i> Distribusi Prioritas Pengaduan</div>
+                            <div class="card-body">
+                                <div class="chart-container" style="position: relative; height:300px; width:100%"><canvas id="priorityChart"></canvas></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mb-4">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header"><i class="fas fa-map-marked-alt me-2"></i> Distribusi Pengaduan per Wilayah</div>
+                            <div class="card-body">
+                                <button id="regionalChartBackButton" class="btn btn-sm mb-2" style="display:none;"><i class="fas fa-arrow-left me-1"></i> Kembali</button>
+                                <div class="chart-container" style="position: relative; height:300px; width:100%"><canvas id="regionalPieChart"></canvas></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 mb-4"> <div class="card shadow-sm h-100">
+                            <div class="card-header"><i class="fas fa-layer-group me-2"></i> Distribusi Kategori Berdasarkan Status</div>
+                            <div class="card-body">
+                                <div class="chart-container" style="position: relative; height:350px; width:100%"><canvas id="categoryStatusChart"></canvas></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> <div id="userManagementContent" class="section-content">
+                 <div class="card shadow-sm">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-users-cog me-2"></i> Kelola Pengguna dan Otoritas
+                        </div>
+                        <button class="btn btn-primary btn-sm" id="addUserBtn" data-bs-toggle="modal" data-bs-target="#userModal" style="display: none;"> <i class="fas fa-user-plus me-1"></i> Tambah Pengguna Baru
+                        </button>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                <input type="text" class="form-control" id="searchUserInput" placeholder="Cari berdasarkan Nama Pengguna atau Jabatan..." disabled> </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover" id="tabelUserManagement">
+                                <thead class="table-light"> <tr>
+                                        <th class="text-center" width="5%">No</th>
+                                        <th width="30%">Nama Pengguna</th>
+                                        <th width="25%">Jabatan/Peran</th>
+                                        <th width="25%">Otoritas Tab</th>
+                                        <th class="text-center" width="15%">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbodyUserManagement">
+                                    <tr><td colspan="5" class="text-center py-4"><span class="spinner-border spinner-border-sm"></span> Memuat data pengguna...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                         <nav aria-label="Page navigation example" class="mt-3 d-flex justify-content-center">
+                            <ul class="pagination pagination-sm">
+                                <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div> </div> </div> </div> <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content shadow-lg">
+            <div class="modal-header bg-primary text-white"> <h5 class="modal-title" id="detailModalLabel">
+                    <i class="fas fa-info-circle me-2"></i>Detail Pengaduan: <span id="detailNoRef" class="fw-bold"></span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row mb-4 g-3">
+                    <div class="col-md-6">
+                         <h6 class="text-primary mb-3"><i class="fas fa-user-tag me-2"></i>Informasi Pelapor & Kategori</h6>
+                         <table class="table table-sm table-borderless">
+                            <tr><th class="text-muted" width="40%">No. Referensi</th><td id="modalNoRef"></td></tr>
+                            <tr><th class="text-muted">Tanggal</th><td id="modalTanggal"></td></tr>
+                            <tr><th class="text-muted">Kategori</th><td id="modalKategori"></td></tr>
+                            <tr><th class="text-muted">Pelapor</th><td id="modalPelapor"></td></tr>
+                            <tr><th class="text-muted">Kontak</th><td id="modalKontak"></td></tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-primary mb-3"><i class="fas fa-map-marked-alt me-2"></i>Lokasi & Tindak Lanjut</h6>
+                         <table class="table table-sm table-borderless">
+                            <tr><th class="text-muted" width="40%">Kabupaten</th><td id="modalKabupaten"></td></tr>
+                            <tr><th class="text-muted">Kecamatan</th><td id="modalKecamatan"></td></tr>
+                            <tr><th class="text-muted">Desa</th><td id="modalDesa"></td></tr>
+                            <tr><th class="text-muted">Aksi</th><td id="modalAksi"></td></tr>
+                            <tr><th class="text-muted">Tenggat</th><td id="modalTenggat"></td></tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h6 class="text-primary mb-2"><i class="fas fa-align-left me-2"></i>Deskripsi Pengaduan</h6>
+                    <div class="p-3 bg-light border rounded" style="min-height: 80px;">
+                        <p id="modalDeskripsi" class="mb-0"></p>
+                    </div>
+                </div>
+                <div class="row text-center g-3">
+                    <div class="col-md-4">
+                        <div class="border rounded p-3 h-100">
+                            <h6 class="text-secondary mb-2 small text-uppercase">Status</h6>
+                            <div id="modalStatus"></div> </div>
+                    </div>
+                    <div class="col-md-4">
+                         <div class="border rounded p-3 h-100">
+                            <h6 class="text-secondary mb-2 small text-uppercase">PIC</h6>
+                            <div id="modalPic" class="fw-bold"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                         <div class="border rounded p-3 h-100">
+                            <h6 class="text-secondary mb-2 small text-uppercase">Prioritas</h6>
+                            <div id="modalPrioritas"></div> </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light"> <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-1"></i>Tutup
+                </button>
+                <button type="button" class="btn btn-warning" id="modalEditBtn"> <i class="fas fa-edit me-1"></i>Edit Data Ini
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white"> <h5 class="modal-title" id="userModalLabel"><i class="fas fa-user-edit me-2"></i>Kelola Pengguna</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="userForm" class="needs-validation" novalidate>
+          <input type="hidden" id="formMode" name="formMode" value="add"> <input type="hidden" id="editUsername" name="editUsername"> <div class="mb-3">
+            <label for="formUsername" class="form-label">Nama Pengguna</label>
+            <div class="input-group has-validation">
+                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                <input type="text" class="form-control" id="formUsername" name="username" required>
+                 <div class="invalid-feedback">
+                    Nama pengguna tidak boleh kosong.
+                </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="formPassword" class="form-label">Password</label>
+            <div class="input-group has-validation">
+                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                <input type="password" class="form-control" id="formPassword" name="password" required>
+                <div class="invalid-feedback">
+                    Password tidak boleh kosong.
+                </div>
+            </div>
+            <small id="passwordHelpBlock" class="form-text text-muted">
+              Masukkan password baru. Wajib diisi untuk pengguna baru.
+            </small>
+          </div>
+          <div class="mb-3">
+            <label for="formUserRole" class="form-label">Jabatan / Peran</label>
+             <div class="input-group has-validation">
+                <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
+                <select class="form-select" id="formUserRole" name="role" required>
+                  <option value="">-- Pilih Peran --</option>
+                  <option value="Administrator">Administrator</option>
+                  <option value="Supervisor">Supervisor</option>
+                  <option value="Staff">Staff</option>
+                  <option value="Viewer">Viewer</option>
+                  <option value="Liasion - Administrator">Liasion - Administrator</option>
+                  <option value="Guest - Assistant">Guest - Assistant</option>
+                  </select>
+                 <div class="invalid-feedback">
+                    Silakan pilih peran pengguna.
+                 </div>
+            </div>
+          </div>
+          <div class="mb-3">
+                <label class="form-label">Otoritas Akses Tab</label>
+                <div id="formTabPermissions" class="is-invalid"> <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="inputContent" id="permInput" name="permissions">
+                        <label class="form-check-label" for="permInput">Form Input</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="prosesContent" id="permProses" name="permissions">
+                        <label class="form-check-label" for="permProses">Proses Pengaduan</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="dashboardContent" id="permDashboard" name="permissions">
+                        <label class="form-check-label" for="permDashboard">Dashboard</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="userManagementContent" id="permUser" name="permissions">
+                        <label class="form-check-label" for="permUser">User Management</label>
+                    </div>
+                </div>
+                 <div class="invalid-feedback" id="permissionError"> Pilih setidaknya satu otoritas tab.
+                 </div>
+           </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+        <button type="submit" class="btn btn-primary" form="userForm" id="saveUserBtn">
+            <i class="fas fa-save me-1"></i> Simpan Pengguna
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="confirmDeleteUserModal" tabindex="-1" aria-labelledby="confirmDeleteUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white"> <h5 class="modal-title" id="confirmDeleteUserModalLabel"><i class="fas fa-exclamation-triangle me-2"></i>Konfirmasi Hapus</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmDeleteUserMessage">Apakah Anda yakin ingin menghapus pengguna ini?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteUserBtn">Ya, Hapus</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="confirmDeleteModalLabel"><i class="fas fa-exclamation-triangle me-2"></i>Konfirmasi Hapus Pengaduan</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Ya, Hapus</button> </div>
+    </div>
+  </div>
+</div>
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+  <div id="toastContainer"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script> <script src="js/config.js"></script> <script src="js/auth.js"></script>   <script src="js/ui.js"></script>     <script src="js/crud.js"></script>   <script src="js/process.js"></script><script src="js/dashboard.js"></script><script src="js/export.js"></script> <script src="js/user_management.js"></script> <script src="js/main.js"></script>   </body>
+</html>

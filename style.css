@@ -1,0 +1,556 @@
+﻿/* Variabel Warna CSS */
+:root {
+    /* Mengganti warna utama dan sekunder menjadi nuansa hijau */
+    --primary-color: #1e8449; /* Hijau Tua - untuk elemen utama seperti header, judul, dll. */
+    --secondary-color: #2ecc71; /* Hijau Sedang - untuk elemen sekunder seperti tab aktif, tombol primer, dll. JANGAN GUNAKAN UNTUK LATAR CARD HEADER DENGAN TEKS PUTIH */
+    --success-color: #5cb85c; /* Hijau Muda - untuk indikasi sukses/berhasil */
+    --warning-color: #f39c12; /* Oranye - tetap untuk peringatan */
+    --danger-color: #e74c3c; /* Merah - tetap untuk bahaya/error */
+    --light-color: #ecf0f1; /* Abu-abu muda - tetap untuk latar belakang ringan */
+    --dark-color: #34495e; /* Abu tua */
+
+    /* Variabel warna spesifik untuk dashboard status */
+    --status-onprogress-color: #3498db; /* Biru untuk ON PROGRESS */
+    --status-hold-color: #fbb034;       /* Oranye untuk HOLD */
+    --status-done-color: #2ecc71;       /* Hijau untuk DONE */
+
+    /* Warna Cerah Baru untuk Badge Peran */
+    --role-admin-bg: #f8d7da; /* Merah muda */
+    --role-admin-text: #721c24; /* Merah tua */
+    --role-supervisor-bg: #fff3cd; /* Kuning muda */
+    --role-supervisor-text: #856404; /* Coklat tua */
+    --role-staff-bg: #cfe2ff; /* Biru muda */
+    --role-staff-text: #0a58ca; /* Biru tua */
+    --role-viewer-bg: #e2e3e5; /* Abu-abu muda */
+    --role-viewer-text: #41464b; /* Abu-abu tua */
+    --role-liasion-admin-bg: #e9d8fd; /* Ungu muda */
+    --role-liasion-admin-text: #6f42c1; /* Ungu */
+    --role-guest-assist-bg: #d1e7dd; /* Hijau muda */
+    --role-guest-assist-text: #0f5132; /* Hijau tua */
+
+    /* Variabel untuk animasi hover hijau */
+    --hover-glow-color: rgba(46, 204, 113, 0.7); /* Warna hijau dengan transparansi untuk glow */
+}
+
+/* Gaya Dasar Body Halaman Utama */
+body {
+    background: linear-gradient(135deg, #f0f4f8, #e9ecef);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    padding: 15px;
+}
+
+/* Gaya Body Khusus Halaman Login */
+body.login-page-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+}
+
+/* Kontainer Login */
+#loginSection {
+    max-width: 400px;
+    width: 100%;
+    padding: 30px;
+    background-color: white;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    text-align: center;
+}
+#loginSection img {
+    margin-bottom: 15px;
+    max-height: 50px;
+    width: auto;
+}
+#loginSection h4 {
+    color: var(--primary-color);
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+#loginError {
+    display: none;
+    font-size: 0.9rem;
+    color: var(--danger-color);
+}
+
+
+/* Kontainer Utama Aplikasi */
+#appSection {
+    display: none;
+    max-width: 1200px;
+    width: 100%;
+    margin: 20px auto;
+    background-color: white;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+}
+
+/* Tombol Logout di Header */
+#logoutButton {
+    font-size: 0.9rem;
+    padding: 5px 10px;
+}
+
+/* Header Aplikasi */
+ .app-header {
+    padding: 15px 0;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 25px;
+    position: relative;
+}
+.app-header .row {
+    position: relative;
+    align-items: center;
+}
+.app-header .logo-img {
+    height: 45px;
+    width: auto;
+    object-fit: contain;
+}
+.app-title {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 0;
+    font-size: 1.4rem;
+}
+
+/* --- Gaya untuk Navigasi Dropdown Utama --- */
+.main-dropdown-nav {
+    background-color: var(--primary-color, #1e8449); /* Warna latar belakang */
+    padding: 0.5rem 1rem; /* Padding */
+    border-radius: 0.375rem; /* Rounded corners */
+    margin-bottom: 1.5rem; /* Jarak ke konten */
+}
+.main-dropdown-nav .nav-item > .nav-link, /* Target direct child nav-link */
+.main-dropdown-nav .nav-item > .dropdown-toggle { /* Target direct child dropdown-toggle */
+    color: white; /* Warna teks */
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border: none;
+    background: none;
+    border-radius: 0.25rem; /* Sedikit rounded untuk tombol utama */
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Tambahkan transisi untuk box-shadow */
+}
+.main-dropdown-nav .nav-item > .nav-link:hover,
+.main-dropdown-nav .nav-item > .dropdown-toggle:hover {
+    color: #f8f9fa; /* Warna teks saat hover */
+    background-color: rgba(255, 255, 255, 0.15); /* Latar hover lebih jelas */
+    box-shadow: 0 0 15px 3px var(--hover-glow-color); /* Efek bayangan hijau saat hover */
+}
+ .main-dropdown-nav .dropdown-menu {
+     border-radius: 0.375rem;
+     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+     margin-top: 0.25rem; /* Beri sedikit jarak dari toggle */
+     border: none; /* Hapus border default dropdown */
+ }
+ .main-dropdown-nav .dropdown-item {
+     padding: 0.6rem 1.2rem; /* Sedikit perbesar padding item dropdown */
+     font-weight: 400;
+     transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Tambahkan transisi untuk box-shadow */
+     border-radius: 0.25rem; /* Rounded corner untuk item dropdown */
+ }
+ .main-dropdown-nav .dropdown-item:hover,
+ .main-dropdown-nav .dropdown-item:focus {
+    background-color: rgba(46, 204, 113, 0.2); /* Latar hijau transparan saat hover */
+    color: var(--primary-color); /* Warna teks jadi hijau tua saat hover */
+    box-shadow: inset 0 0 10px -2px var(--hover-glow-color); /* Efek bayangan hijau ke dalam saat hover */
+ }
+ .main-dropdown-nav .dropdown-item i {
+     width: 1.25em; /* Ruang untuk ikon */
+     margin-right: 0.5rem;
+     color: #495057; /* Warna ikon dropdown item */
+     transition: color 0.3s ease-in-out;
+ }
+ .main-dropdown-nav .dropdown-item:hover i,
+ .main-dropdown-nav .dropdown-item:focus i {
+    color: var(--primary-color); /* Warna ikon jadi hijau tua saat hover */
+ }
+
+ /* Kelas untuk menandai tombol navigasi utama yang aktif */
+ .main-dropdown-nav .nav-item > .nav-link.active-section,
+ .main-dropdown-nav .nav-item > .dropdown-toggle.active-section {
+    background-color: rgba(0, 0, 0, 0.2) !important; /* Lebih gelap untuk menunjukkan aktif */
+    color: white !important;
+    font-weight: bold;
+    box-shadow: 0 0 15px 3px var(--hover-glow-color); /* Efek bayangan hijau juga saat aktif */
+ }
+/* --- Akhir Gaya Navigasi Dropdown --- */
+
+
+/* Card */
+.card {
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+.card-header {
+    /* PERBAIKAN: Menggunakan --primary-color untuk latar belakang agar kontras dengan teks putih */
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 500;
+    border-radius: 8px 8px 0 0 !important;
+    padding: 10px 15px;
+}
+
+/* PERBAIKAN: Aturan spesifik untuk .card-header.bg-light */
+.card-header.bg-light {
+    background-color: #f8f9fa; /* Warna default Bootstrap .bg-light */
+    color: var(--dark-color, #34495e) !important; /* Warna teks gelap agar terbaca */
+}
+
+
+/* Form */
+.form-label {
+    font-weight: 500;
+    color: var(--primary-color);
+    margin-bottom: 0.3rem;
+}
+.form-control, .form-select {
+    border-radius: 6px;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    font-size: 0.95rem;
+}
+.form-control:focus, .form-select:focus {
+    border-color: var(--secondary-color); /* Mungkin perlu disesuaikan jika --secondary-color terlalu terang */
+    box-shadow: 0 0 0 0.2rem var(--hover-glow-color), 0 0 8px var(--hover-glow-color); /* Efek glow hijau saat focus */
+}
+.form-control:disabled, .form-select:disabled, .btn:disabled {
+    background-color: #e9ecef;
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+
+/* Tombol */
+.btn {
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: background-color 0.2s ease, box-shadow 0.3s ease-in-out; /* Tambah transisi box-shadow */
+}
+/* Tombol Primer menggunakan --secondary-color, pastikan kontras teksnya (default putih) */
+.btn-primary {
+    background-color: var(--secondary-color); /* #2ecc71 */
+    border-color: var(--secondary-color);
+    color: var(--dark-color, #34495e); /* PERUBAHAN: Teks gelap untuk kontras lebih baik */
+}
+.btn-primary:hover {
+    background-color: #27ae60; /* Sedikit lebih gelap */
+    border-color: #27ae60;
+    color: var(--dark-color, #34495e); /* PERUBAHAN: Teks gelap untuk kontras lebih baik */
+    box-shadow: 0 0 12px 2px var(--hover-glow-color); /* Efek glow hijau saat hover */
+}
+
+.btn-success { background-color: var(--success-color); border-color: var(--success-color); color: white; }
+.btn-success:hover { background-color: #4cae4c; border-color: #4cae4c; box-shadow: 0 0 12px 2px rgba(92, 184, 92, 0.6); }
+.btn-danger { background-color: var(--danger-color); border-color: var(--danger-color); color: white; }
+.btn-danger:hover { background-color: #c0392b; box-shadow: 0 0 12px 2px rgba(231, 76, 60, 0.6); }
+.btn-warning { background-color: var(--warning-color); border-color: var(--warning-color); color: white; }
+.btn-warning:hover { background-color: #d35400; box-shadow: 0 0 12px 2px rgba(243, 156, 18, 0.6); }
+.btn-outline-secondary:hover {
+    box-shadow: 0 0 12px 2px rgba(108, 117, 125, 0.4);
+}
+
+
+/* Tabel */
+.table {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    margin-top: 15px;
+}
+.table thead th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 500;
+    vertical-align: middle;
+    font-size: 0.9rem;
+}
+ .table tbody tr {
+    font-size: 0.9rem;
+ }
+.table tbody tr:hover { background-color: #f8f9fa; }
+
+/* Kartu Statistik */
+.stat-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+.stat-card .stat-icon,
+.stat-card .stat-number {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.stat-card .stat-number {
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+/* Kelas spesifik untuk warna kartu statistik berdasarkan status */
+#totalPengaduanCard .stat-icon, #totalPengaduanCard .stat-number { color: #000; }
+#totalOnprogressCard .stat-icon i { color: var(--status-onprogress-color) !important; }
+#totalOnprogressCard #totalOnprogress.stat-number { color: var(--status-onprogress-color) !important; }
+#totalHoldCard .stat-icon, #totalHoldCard .stat-number { color: var(--status-hold-color); }
+#totalDoneCard .stat-icon, #totalDoneCard .stat-number { color: var(--status-done-color); }
+
+
+/* Kontainer Chart dan Tabel Responsif */
+.chart-container,
+.table-responsive {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+/* Badge Status dan Prioritas (Kelas spesifik) */
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    color: white; /* Default warna teks putih */
+}
+.badge i { margin-right: 5px; }
+/* Status Badges */
+.badge-status-onprogress { background-color: var(--status-onprogress-color); color: white; }
+.badge-status-hold { background-color: var(--status-hold-color); color: var(--dark-color); } /* Teks gelap untuk kontras */
+.badge-status-done { background-color: var(--status-done-color); color: white; }
+.badge-status-default { background-color: #6c757d; color: white; }
+/* Priority Badges */
+.badge-priority-low { background-color: var(--status-done-color); color: white; }
+.badge-priority-medium { background-color: var(--status-hold-color); color: var(--dark-color); } /* Teks gelap untuk kontras */
+.badge-priority-high { background-color: var(--danger-color); color: white; }
+.badge-priority-default { background-color: #6c757d; color: white; }
+
+/* === PERUBAHAN WARNA BADGE PERAN === */
+/* Menggunakan variabel CSS baru untuk warna yang lebih cerah */
+.badge.bg-administrator,
+.badge.role-administrator { /* Tambahkan kelas peran jika digunakan di JS */
+    background-color: var(--role-admin-bg) !important;
+    color: var(--role-admin-text) !important;
+    border: 1px solid var(--role-admin-text); /* Opsional: tambahkan border tipis */
+}
+.badge.bg-supervisor,
+.badge.role-supervisor {
+    background-color: var(--role-supervisor-bg) !important;
+    color: var(--role-supervisor-text) !important;
+    border: 1px solid var(--role-supervisor-text);
+}
+.badge.bg-staff,
+.badge.role-staff {
+    background-color: var(--role-staff-bg) !important;
+    color: var(--role-staff-text) !important;
+    border: 1px solid var(--role-staff-text);
+}
+.badge.bg-viewer,
+.badge.role-viewer {
+    background-color: var(--role-viewer-bg) !important;
+    color: var(--role-viewer-text) !important;
+    border: 1px solid var(--role-viewer-text);
+}
+.badge.bg-liasion---administrator, /* Kelas dari HTML sebelumnya */
+.badge.role-liasion-administrator { /* Kelas peran yang mungkin digunakan di JS */
+    background-color: var(--role-liasion-admin-bg) !important;
+    color: var(--role-liasion-admin-text) !important;
+    border: 1px solid var(--role-liasion-admin-text);
+}
+.badge.bg-guest---assistant, /* Kelas dari HTML sebelumnya */
+.badge.role-guest-assistant { /* Kelas peran yang mungkin digunakan di JS */
+    background-color: var(--role-guest-assist-bg) !important;
+    color: var(--role-guest-assist-text) !important;
+    border: 1px solid var(--role-guest-assist-text);
+}
+/* Tambahkan aturan untuk peran lain jika ada */
+/* === AKHIR PERUBAHAN WARNA BADGE PERAN === */
+
+
+/* Input Group */
+.input-group-text { background-color: #f8f9fa; border-right: none; color: #6c757d; }
+.input-group .form-control { border-left: none; }
+
+/* Tombol Aksi di Tabel */
+#tbodyData .btn { margin: 0 2px; }
+/* Class untuk menyembunyikan tombol aksi berdasarkan role */
+.action-button-hidden { display: none !important; }
+
+
+/* Modal */
+/* PERBAIKAN: Modal header menggunakan --primary-color agar konsisten dengan card-header */
+.modal-header {
+    background-color: var(--primary-color);
+    color: white;
+}
+.modal-title { font-weight: 500; }
+.modal-body .table th { width: 35%; }
+.modal-body .card-header {
+    background-color: #f8f9fa;
+    color: var(--primary-color); /* Teks gelap di atas latar terang */
+    font-weight: 500;
+}
+
+/* Kontainer Tombol Logout dan Info Pengguna */
+.header-controls {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+}
+
+/* Info Pengguna */
+#userInfo {
+    font-size: 0.85rem;
+    color: var(--primary-color);
+    text-align: right;
+    margin-right: 15px;
+}
+#userInfo .user-name {
+    font-weight: 600;
+    display: block;
+}
+#userInfo .user-role {
+    /* Styling untuk badge peran di header (akan ditimpa oleh kelas spesifik di atas) */
+    font-size: 0.75rem;
+    display: inline-block; /* Agar padding badge bekerja */
+    vertical-align: middle; /* Sejajarkan dengan nama */
+    margin-left: 5px; /* Jarak dari nama */
+}
+
+/* Link File di Riwayat */
+#riwayatProsesBody a.file-link {
+    text-decoration: none;
+    color: var(--primary-color);
+    cursor: pointer;
+}
+ #riwayatProsesBody a.file-link:hover {
+    color: var(--secondary-color); /* Warna hover bisa disesuaikan */
+    text-decoration: underline;
+ }
+
+/* Tabel Manajemen Pengguna */
+#userManagementTable th, #userManagementTable td {
+    vertical-align: middle;
+}
+
+/* Gaya untuk menampilkan nama file yang dipilih */
+.file-name-display {
+    margin-left: 0.75rem;
+    font-size: 0.875rem;
+    color: #6c757d;
+    vertical-align: middle;
+}
+
+/* Style untuk tombol lampiran agar lebih menonjol */
+.attachment-button {
+    transition: all 0.2s ease-in-out;
+}
+.attachment-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Media Query untuk Responsif */
+@media (max-width: 768px) {
+     body:not(.login-page-body) {
+         align-items: flex-start;
+         padding-top: 20px;
+     }
+     #loginSection { padding: 20px; }
+
+     #appSection { padding: 10px; margin-top: 10px; margin-bottom: 10px; }
+    .btn { padding: 8px 16px; font-size: 0.9rem; }
+    .app-header { text-align: center; padding: 10px 0; margin-bottom: 15px;}
+    .app-header .row { flex-direction: column; }
+    .app-header .logo-img { height: 35px; margin-bottom: 5px; }
+    .app-title { font-size: 1.2rem; margin-bottom: 10px; }
+
+    .header-controls {
+        position: static;
+        transform: none;
+        width: 100%;
+        justify-content: center;
+        margin-top: 10px;
+        flex-direction: column-reverse;
+    }
+    #userInfo {
+        text-align: center;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+    #logoutButtonContainer {
+         width: auto;
+    }
+
+    .stat-card { padding: 15px; }
+    .stat-icon { font-size: 2rem; }
+    .stat-number { font-size: 1.5rem; }
+    .chart-container, .table-responsive { padding: 15px; }
+
+    body {
+        padding: 10px;
+    }
+
+    .app-content-padding {
+        padding: 10px;
+    }
+
+    .row.mb-3 > div {
+        margin-bottom: 1rem !important;
+    }
+    .row.mb-3 > div:last-child {
+        margin-bottom: 0 !important;
+    }
+}
+
+
+/* --- Perbaikan Gaya Bootstrap yang Ditimpa --- */
+/* Menggunakan variabel CSS untuk warna latar dan teks badge Bootstrap */
+/* Pastikan variabel ini didefinisikan dan memiliki kontras yang baik */
+.bg-info {
+  background-color: var(--status-onprogress-color) !important; /* Biru */
+  color: white !important;
+}
+
+.bg-warning {
+  background-color: var(--status-hold-color) !important; /* Oranye */
+  color: var(--dark-color) !important; /* Teks gelap untuk kontras dengan oranye */
+}
+
+.bg-success {
+  background-color: var(--status-done-color) !important; /* Hijau */
+  color: white !important;
+}
+
+/* Menggunakan variabel CSS untuk warna teks Bootstrap */
+.text-info {
+  color: var(--status-onprogress-color) !important;
+}
+
+.text-warning {
+  color: var(--status-hold-color) !important;
+}
+
+.text-success {
+  color: var(--status-done-color) !important;
+}
